@@ -13,6 +13,7 @@ import com.facebook.react.bridge.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.lang.SecurityException
 import java.util.*
 
 
@@ -41,6 +42,8 @@ class PdfThumbnailModule(reactContext: ReactApplicationContext) : ReactContextBa
 
       val result = renderPage(pdfRenderer, page, filePath, quality)
       promise.resolve(result)
+    } catch (ex: SecurityException) {
+      promise.reject("SECURITY_ERROR", ex)
     } catch (ex: IOException) {
       promise.reject("INTERNAL_ERROR", ex)
     } finally {
@@ -66,6 +69,8 @@ class PdfThumbnailModule(reactContext: ReactApplicationContext) : ReactContextBa
         result.pushMap(renderPage(pdfRenderer, page, filePath, quality))
       }
       promise.resolve(result)
+    } catch (ex: SecurityException) {
+      promise.reject("SECURITY_ERROR", ex)
     } catch (ex: IOException) {
       promise.reject("INTERNAL_ERROR", ex)
     } finally {
